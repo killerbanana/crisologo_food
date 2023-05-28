@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215246146928",
+    "project_id": "restaurant-ilocos",
+    "storage_bucket": "restaurant-ilocos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215246146928:android:59de713a900cdf7fbf53b5",
+        "android_client_info": {
+          "package_name": "com.example.restaurant_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjynwG-6RXjEKA6q8j3bIwYjzZJoEzCZ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
