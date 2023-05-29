@@ -110,20 +110,20 @@ class _EditStoreLocationState extends State<EditStoreLocation> {
                           path: filePicker!.files.single.path!,
                         );
                       }
-                      await locations.doc(shopName[1]).set({
-                        'id': locations.doc().id,
-                        'seller_id': shopName[1],
-                        'imageUrl': url ??
-                            'https://firebasestorage.googleapis.com/v0/b/restaurant-ilocos.appspot.com/o/noimage.png?alt=media&token=a0b3b506-ee61-40cb-b6bc-d250c2cef0c9',
-                      }).then((value) {
-                        const snackBar = SnackBar(
-                          content: Text('Location Saved!'),
-                          duration: Duration(seconds: 2),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }).catchError(
-                          (error) => print("Failed to add user: $error"));
                     }
+                    await locations.doc(shopName[1]).set({
+                      'id': locations.doc().id,
+                      'seller_id': shopName[1],
+                      'imageUrl': url ??
+                          'https://firebasestorage.googleapis.com/v0/b/restaurant-ilocos.appspot.com/o/noimage.png?alt=media&token=a0b3b506-ee61-40cb-b6bc-d250c2cef0c9',
+                    }).then((value) {
+                      const snackBar = SnackBar(
+                        content: Text('Location Saved!'),
+                        duration: Duration(seconds: 2),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }).catchError(
+                        (error) => print("Failed to add user: $error"));
                   },
                   child: Text(
                     'Save Location',

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,8 @@ class SellerLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> shop_products =
         FirebaseFirestore.instance.collection('shop_products').snapshots();
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -51,7 +54,9 @@ class SellerLayout extends StatelessWidget {
                 child: CupertinoButton.filled(
                   onPressed: () {
                     // Perform registration functionality here
-                    // Navigator.pushNamed(context, '/add-menu');
+
+                    Navigator.pushNamed(context, '/edit-profile-seller',
+                        arguments: _auth.currentUser!.uid);
                   },
                   child: Text(
                     'View Profile',

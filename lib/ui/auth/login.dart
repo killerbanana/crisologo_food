@@ -36,7 +36,7 @@ class LogIn extends StatelessWidget {
                 child: SizedBox(
                   height: 150.0,
                   child: Image.network(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB_ICqCxYyXqjRtBuT3EmUjjGTTkc1wqIh4Q&usqp=CAU',
+                    'https://firebasestorage.googleapis.com/v0/b/restaurant-ilocos.appspot.com/o/Crisologo.png?alt=media&token=240f1bb0-9107-4224-8eb9-05b66e5e6443',
                     fit: BoxFit.contain,
                   ),
                 ),

@@ -31,6 +31,7 @@ import 'package:restaurant_app/ui/profile/profile_layout.dart';
 import 'package:restaurant_app/ui/seller/add_menu.dart';
 import 'package:restaurant_app/ui/seller/add_menu_form.dart';
 import 'package:restaurant_app/ui/seller/components/edit_product.dart';
+import 'package:restaurant_app/ui/seller/components/edit_profile.dart';
 import 'package:restaurant_app/ui/seller/seller_layout.dart';
 
 import '../../ui/auth/bloc/auth_bloc.dart';
@@ -121,6 +122,11 @@ class FloruRouter {
     return ProfileLayout();
   }));
 
+  static var editProfileSellerHandler = Handler(
+      handlerFunc: ((BuildContext? context, Map<String, dynamic> params) {
+    return EditProfileSeller();
+  }));
+
   static var changePasswordHandler = Handler(
       handlerFunc: ((BuildContext? context, Map<String, dynamic> params) {
     return ChangePassword();
@@ -173,6 +179,10 @@ class FloruRouter {
 
     fluroRouter.define('/profile',
         handler: profileHandler, transitionType: TransitionType.fadeIn);
+
+    fluroRouter.define('/edit-profile-seller',
+        handler: editProfileSellerHandler,
+        transitionType: TransitionType.fadeIn);
 
     fluroRouter.define('/change-password',
         handler: changePasswordHandler, transitionType: TransitionType.fadeIn);

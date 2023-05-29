@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_app/styles/styles.dart';
+import 'package:restaurant_app/ui/home/components/product_view.dart';
 import 'package:restaurant_app/ui/home/components/slider.dart';
 
 class HomeBody extends StatelessWidget {
@@ -10,7 +11,7 @@ class HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _shopStream =
-        FirebaseFirestore.instance.collection('banner').snapshots();
+        FirebaseFirestore.instance.collection('shops').snapshots();
     final Stream<QuerySnapshot> _category =
         FirebaseFirestore.instance.collection('category').snapshots();
     return Column(
@@ -140,67 +141,86 @@ class HomeBody extends StatelessWidget {
                   children: List.generate(data.length, (index) {
                     Map<String, dynamic> datas =
                         data[index].data()! as Map<String, dynamic>;
-                    return Container(
-                      width: 140,
-                      height: 242,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.black.withOpacity(.05),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 180,
-                            width: 160,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                              ),
-                              image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: NetworkImage(
-                                  datas['imageUrl'],
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductView(
+                              sellerId: snapshot.data!.docs[index].id,
+                              sellerName: datas['name'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 140,
+                        height: 252,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.black.withOpacity(.05),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 180,
+                              width: 160,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  topRight: Radius.circular(8),
+                                ),
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(
+                                    datas['imageUrl'],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(
-                              datas['name'],
-                              style: GoogleFonts.inter(
-                                fontSize: 16,
-                                color: Color(0xFF000000),
-                                fontWeight: FontWeight.w500,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                datas['name'],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  color: Color(0xFF000000),
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(
-                              datas['isOpen'] ? "Open" : "Close",
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                color:
-                                    datas['isOpen'] ? Colors.green : Colors.red,
-                                fontWeight: FontWeight.w400,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                datas['isOpen'] ? "Open" : "Close",
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: datas['isOpen']
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(
-                              '${datas['opening']} - ${datas['closing']}',
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                color: Color(0XFF756F6F),
-                                fontWeight: FontWeight.w400,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                '${datas['opening']} - ${datas['closing']}',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: Color(0XFF756F6F),
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   }),
