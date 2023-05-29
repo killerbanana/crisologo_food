@@ -46,18 +46,34 @@ class ProductView extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> data =
                       snapshot.data!.data() as Map<String, dynamic>;
-                  return Container(
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      data['imageUrl'],
-                      fit: BoxFit.fill,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/product-fullscreen',
+                          arguments: data['imageUrl']);
+                    },
+                    child: Container(
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      child: InteractiveViewer(
+                        panEnabled: true,
+                        boundaryMargin: EdgeInsets.all(double.infinity),
+                        minScale: 1,
+                        maxScale: 4.0,
+                        scaleEnabled: true,
+                        child: Image.network(
+                          data['imageUrl'],
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     ),
                   );
                 }
 
                 return Text("Loading location...");
               },
+            ),
+            SizedBox(
+              height: 10,
             ),
             StreamBuilder<QuerySnapshot>(
                 stream: products
@@ -74,36 +90,81 @@ class ProductView extends StatelessWidget {
                   }
 
                   return Expanded(
-                    child: ListView(
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
-                        return Column(
-                          children: [
-                            Container(
-                              color: Colors.grey[300],
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(data['imageUrl']),
-                                ),
-                                title: Text(data['name']),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('₱ ${data['price']}'),
-                                    Text(data['category']),
-                                    const Divider(
-                                      thickness: 1,
-                                    )
-                                  ],
+                    child: ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Map<String, dynamic> datas = snapshot.data!.docs[index]
+                            .data()! as Map<String, dynamic>;
+
+                        final product = snapshot.data!.docs[index];
+
+                        // Check if it's the first item of a new category
+                        if (index == 0 ||
+                            product['category'] !=
+                                snapshot.data!.docs[index - 1]['category']) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  product['category'],
+                                  style: textInter.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
+                              ListTile(
+                                title: Text(
+                                  product['name'],
+                                  style: textInter.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(product['imageUrl']),
+                                ),
+                                subtitle: Text(
+                                  'Price: ₱ ${product['price']}',
+                                  style: textInter.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return ListTile(
+                          title: Text(
+                            product['name'],
+                            style: textInter.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Colors.black,
                             ),
-                          ],
+                          ),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(product['imageUrl']),
+                          ),
+                          subtitle: Text(
+                            'Price: ₱ ${product['price']}',
+                            style: textInter.copyWith(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
+                      },
                     ),
                   );
                 }),

@@ -50,8 +50,8 @@ android {
         minSdkVersion 28
         targetSdkVersion 33
         compileSdkVersion 33
-        versionCode 75
-        versionName "v0.91.0"
+        versionCode 78
+        versionName "v0.92.0"
     }
 
     buildTypes {
