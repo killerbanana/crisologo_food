@@ -26,6 +26,7 @@ import 'package:restaurant_app/ui/auth/change_password.dart';
 import 'package:restaurant_app/ui/auth/login.dart';
 import 'package:restaurant_app/ui/auth/register.dart';
 import 'package:restaurant_app/ui/auth/success_register.dart';
+import 'package:restaurant_app/ui/home/components/product_detail_page.dart';
 import 'package:restaurant_app/ui/home/components/product_fullscreen.dart';
 import 'package:restaurant_app/ui/home/home_layout.dart';
 import 'package:restaurant_app/ui/profile/profile_layout.dart';
@@ -164,6 +165,11 @@ class FloruRouter {
     return ProductFullScreen();
   }));
 
+  static var productDescriptionHandler = Handler(
+      handlerFunc: ((BuildContext? context, Map<String, dynamic> params) {
+    return ProductDetailPage();
+  }));
+
   static initRoutes() {
     fluroRouter.define('/',
         handler: homeScreenHandler, transitionType: TransitionType.fadeIn);
@@ -211,6 +217,10 @@ class FloruRouter {
 
     fluroRouter.define('/product-fullscreen',
         handler: productFullscreenHandler,
+        transitionType: TransitionType.fadeIn);
+
+    fluroRouter.define('/product-details',
+        handler: productDescriptionHandler,
         transitionType: TransitionType.fadeIn);
   }
 }

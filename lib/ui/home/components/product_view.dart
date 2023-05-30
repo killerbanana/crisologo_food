@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/styles/styles.dart';
+import 'package:restaurant_app/ui/seller/arguments/product_args.dart';
 
 class ProductView extends StatelessWidget {
   final String sellerName;
@@ -118,49 +119,88 @@ class ProductView extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              ListTile(
-                                title: Text(
-                                  product['name'],
-                                  style: textInter.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    color: Colors.black,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/product-details',
+                                    arguments: ProductArgs(
+                                      id: snapshot.data!.docs[index].id,
+                                      name: datas['name'],
+                                      desc: datas['description'],
+                                      price: datas['price'],
+                                      category: datas['category'],
+                                      imageUrl: datas['imageUrl'],
+                                    ),
+                                  );
+                                },
+                                child: ListTile(
+                                  title: Text(
+                                    product['name'],
+                                    style: textInter.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(product['imageUrl']),
-                                ),
-                                subtitle: Text(
-                                  'Price: ₱ ${product['price']}',
-                                  style: textInter.copyWith(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 12,
-                                    color: Colors.black,
+                                  leading: Hero(
+                                    tag: snapshot.data!.docs[index].id,
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(product['imageUrl']),
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    'Price: ₱ ${product['price']}',
+                                    style: textInter.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           );
                         }
-                        return ListTile(
-                          title: Text(
-                            product['name'],
-                            style: textInter.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: Colors.black,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/product-details',
+                              arguments: ProductArgs(
+                                id: snapshot.data!.docs[index].id,
+                                name: datas['name'],
+                                desc: datas['description'],
+                                price: datas['price'],
+                                category: datas['category'],
+                                imageUrl: datas['imageUrl'],
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            title: Text(
+                              product['name'],
+                              style: textInter.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(product['imageUrl']),
-                          ),
-                          subtitle: Text(
-                            'Price: ₱ ${product['price']}',
-                            style: textInter.copyWith(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 12,
-                              color: Colors.black,
+                            leading: Hero(
+                              tag: snapshot.data!.docs[index].id,
+                              child: CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(product['imageUrl']),
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Price: ₱ ${product['price']}',
+                              style: textInter.copyWith(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         );

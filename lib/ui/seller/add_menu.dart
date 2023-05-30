@@ -73,113 +73,238 @@ class AddMenu extends StatelessWidget {
                   }
 
                   return Expanded(
-                    child: ListView(
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
-                        return Column(
-                          children: [
-                            Container(
-                              color: Colors.grey[300],
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(data['imageUrl']),
-                                ),
-                                title: Text(data['name']),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('₱ ${data['price']}'),
-                                    Text(data['category']),
-                                    const Divider(
-                                      thickness: 1,
-                                    )
-                                  ],
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      color: Colors.blue,
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
-                                        BlocProvider.of<ProductBloc>(context)
-                                            .add(SelectCategoryEvent(
-                                                category: data['category']));
+                    child: ListView.separated(
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          Map<String, dynamic> datas =
+                              snapshot.data!.docs[index].data()!
+                                  as Map<String, dynamic>;
 
-                                        BlocProvider.of<ProductBloc>(context)
-                                            .add(const ChangeProductImageEvent(
-                                                file: null));
+                          final product = snapshot.data!.docs[index];
 
-                                        Navigator.pushNamed(
-                                            context, 'product-edit',
-                                            arguments: ProductArgs(
-                                              id: document.id,
-                                              name: data['name'],
-                                              desc: data['description'],
-                                              price: data['price'],
-                                              category: data['category'],
-                                              imageUrl: data['imageUrl'],
-                                            ));
-                                      },
+                          // Check if it's the first item of a new category
+                          if (index == 0 ||
+                              product['category'] !=
+                                  snapshot.data!.docs[index - 1]['category']) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  child: Text(
+                                    product['category'],
+                                    style: textInter.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black,
                                     ),
-                                    IconButton(
-                                      color: Colors.red,
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: const Text('Confirmation'),
-                                              content: Text(
-                                                  'Do you want to delete ${data['name']}?'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: const Text('No'),
-                                                  onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop(false);
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: const Text('Yes'),
-                                                  onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop(true);
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ).then((value) {
-                                          if (value != null && value) {
-                                            products
-                                                .doc(document.id)
-                                                .delete()
-                                                .then((value) {
-                                              const snackBar = SnackBar(
-                                                content:
-                                                    Text('Product Deleted'),
-                                                duration: Duration(seconds: 2),
+                                  ),
+                                ),
+                                ListTile(
+                                  title: Text(
+                                    product['name'],
+                                    style: textInter.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(product['imageUrl']),
+                                  ),
+                                  subtitle: Text(
+                                    'Price: ₱ ${product['price']}',
+                                    style: textInter.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        color: Colors.blue,
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          BlocProvider.of<ProductBloc>(context)
+                                              .add(SelectCategoryEvent(
+                                                  category:
+                                                      product['category']));
+
+                                          BlocProvider.of<ProductBloc>(context)
+                                              .add(
+                                                  const ChangeProductImageEvent(
+                                                      file: null));
+
+                                          Navigator.pushNamed(
+                                              context, 'product-edit',
+                                              arguments: ProductArgs(
+                                                id: snapshot
+                                                    .data!.docs[index].id,
+                                                name: product['name'],
+                                                desc: product['description'],
+                                                price: product['price'],
+                                                category: product['category'],
+                                                imageUrl: product['imageUrl'],
+                                              ));
+                                        },
+                                      ),
+                                      IconButton(
+                                        color: Colors.red,
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title:
+                                                    const Text('Confirmation'),
+                                                content: Text(
+                                                    'Do you want to delete ${product['name']}?'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: const Text('No'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(false);
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: const Text('Yes'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                    },
+                                                  ),
+                                                ],
                                               );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-                                            });
-                                          } else {}
-                                        });
-                                      },
-                                    ),
-                                  ],
+                                            },
+                                          ).then((value) {
+                                            if (value != null && value) {
+                                              products
+                                                  .doc(snapshot
+                                                      .data!.docs[index].id)
+                                                  .delete()
+                                                  .then((value) {
+                                                const snackBar = SnackBar(
+                                                  content:
+                                                      Text('Product Deleted'),
+                                                  duration:
+                                                      Duration(seconds: 2),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              });
+                                            } else {}
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                              ],
+                            );
+                          }
+                          return ListTile(
+                            title: Text(
+                              product['name'],
+                              style: textInter.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: Colors.black,
                               ),
                             ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(product['imageUrl']),
+                            ),
+                            subtitle: Text(
+                              'Price: ₱ ${product['price']}',
+                              style: textInter.copyWith(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  color: Colors.blue,
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () {
+                                    BlocProvider.of<ProductBloc>(context).add(
+                                        SelectCategoryEvent(
+                                            category: product['category']));
+
+                                    BlocProvider.of<ProductBloc>(context).add(
+                                        const ChangeProductImageEvent(
+                                            file: null));
+
+                                    Navigator.pushNamed(context, 'product-edit',
+                                        arguments: ProductArgs(
+                                          id: snapshot.data!.docs[index].id,
+                                          name: product['name'],
+                                          desc: product['description'],
+                                          price: product['price'],
+                                          category: product['category'],
+                                          imageUrl: product['imageUrl'],
+                                        ));
+                                  },
+                                ),
+                                IconButton(
+                                  color: Colors.red,
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Confirmation'),
+                                          content: Text(
+                                              'Do you want to delete ${product['name']}?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('No'),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text('Yes'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ).then((value) {
+                                      if (value != null && value) {
+                                        products
+                                            .doc(snapshot.data!.docs[index].id)
+                                            .delete()
+                                            .then((value) {
+                                          const snackBar = SnackBar(
+                                            content: Text('Product Deleted'),
+                                            duration: Duration(seconds: 2),
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                        });
+                                      } else {}
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
                   );
                 })
           ]),
