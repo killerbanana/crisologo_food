@@ -10,6 +10,7 @@ import 'package:restaurant_app/styles/styles.dart';
 import 'package:restaurant_app/ui/search/bloc/search_bloc.dart';
 import 'package:restaurant_app/ui/search/components/product_card.dart';
 import 'package:restaurant_app/ui/search/components/selectable_chip.dart';
+import 'package:restaurant_app/ui/seller/arguments/product_args.dart';
 import 'package:restaurant_app/ui/seller/bloc/product_bloc.dart';
 
 import '../home/components/product_view.dart';
@@ -171,6 +172,20 @@ class _SearchState extends State<Search> {
                                     ),
                                   ),
                                 );
+                              } else {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/product-details',
+                                  arguments: ProductArgs(
+                                    id: state.list[index].id,
+                                    name: datas['name'],
+                                    desc: datas['description'],
+                                    price: datas['price'],
+                                    category: datas['category'],
+                                    imageUrl: datas['imageUrl'],
+                                    promo: datas['promo'],
+                                  ),
+                                );
                               }
                             },
                             child: Container(
@@ -183,18 +198,21 @@ class _SearchState extends State<Search> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    height: 180,
-                                    width: 160,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(8),
-                                        topRight: Radius.circular(8),
-                                      ),
-                                      image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: NetworkImage(
-                                          datas['imageUrl'],
+                                  Hero(
+                                    tag: state.list[index].id,
+                                    child: Container(
+                                      height: 180,
+                                      width: 160,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                        image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: NetworkImage(
+                                            datas['imageUrl'],
+                                          ),
                                         ),
                                       ),
                                     ),

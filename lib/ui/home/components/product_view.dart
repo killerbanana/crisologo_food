@@ -131,6 +131,7 @@ class ProductView extends StatelessWidget {
                                       price: datas['price'],
                                       category: datas['category'],
                                       imageUrl: datas['imageUrl'],
+                                      promo: datas['promo'],
                                     ),
                                   );
                                 },
@@ -175,6 +176,7 @@ class ProductView extends StatelessWidget {
                                 price: datas['price'],
                                 category: datas['category'],
                                 imageUrl: datas['imageUrl'],
+                                promo: datas['promo'],
                               ),
                             );
                           },

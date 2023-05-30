@@ -21,6 +21,7 @@ class AddMenuForm extends StatelessWidget {
     final TextEditingController nameCtrl = TextEditingController();
     final TextEditingController priceCtrl = TextEditingController();
     final TextEditingController descCtrl = TextEditingController();
+    final TextEditingController promosCtrl = TextEditingController();
 
     final _formKey = GlobalKey<FormState>();
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -223,6 +224,32 @@ class AddMenuForm extends StatelessWidget {
                     height: 5,
                   ),
                   const DropDown(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    width: double.infinity,
+                    child: CupertinoTextField(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 20.0),
+                      placeholder: 'Promos (optional)',
+                      onChanged: (value) {
+                        BlocProvider.of<ProductBloc>(context)
+                            .add(const AddErrorEvent(withError: false));
+                      },
+                      controller: promosCtrl,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            offset: Offset(0, 2),
+                            blurRadius: 4.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 30,
                   ),
@@ -275,6 +302,8 @@ class AddMenuForm extends StatelessWidget {
                             'description': descCtrl.text,
                             'category': state.category,
                             'type': 'product',
+                            'promo':
+                                promosCtrl.text.isEmpty ? '' : promosCtrl.text,
                             'imageUrl': url ??
                                 'https://firebasestorage.googleapis.com/v0/b/restaurant-ilocos.appspot.com/o/noimage.png?alt=media&token=a0b3b506-ee61-40cb-b6bc-d250c2cef0c9',
                           }).then((value) {

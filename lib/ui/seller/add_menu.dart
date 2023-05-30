@@ -150,6 +150,7 @@ class AddMenu extends StatelessWidget {
                                                 price: product['price'],
                                                 category: product['category'],
                                                 imageUrl: product['imageUrl'],
+                                                promo: product['promo'],
                                               ));
                                         },
                                       ),
@@ -253,6 +254,7 @@ class AddMenu extends StatelessWidget {
                                           price: product['price'],
                                           category: product['category'],
                                           imageUrl: product['imageUrl'],
+                                          promo: product['promo'],
                                         ));
                                   },
                                 ),

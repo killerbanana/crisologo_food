@@ -22,6 +22,7 @@ class EditProduct extends StatelessWidget {
     final TextEditingController nameCtrl = TextEditingController();
     final TextEditingController priceCtrl = TextEditingController();
     final TextEditingController descCtrl = TextEditingController();
+    final TextEditingController promosCtrl = TextEditingController();
 
     final _formKey = GlobalKey<FormState>();
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -38,8 +39,19 @@ class EditProduct extends StatelessWidget {
     nameCtrl.text = arguments.name;
     priceCtrl.text = arguments.price;
     descCtrl.text = arguments.desc;
+    promosCtrl.text = arguments.promo;
 
     return BlocBuilder<ProductBloc, ProductState>(builder: (ctx, state) {
+      // MIGRATE IF NEEDED
+      // FirebaseFirestore.instance
+      //     .collection('products')
+      //     .get()
+      //     .then((QuerySnapshot querySnapshot) {
+      //   querySnapshot.docs.forEach((doc) {
+      //     products.doc(doc.id).update({'promo': ''});
+      //   });
+      // });
+
       if (state.file != null && !kIsWeb) {
         file = File(state.file!.files.single.path!);
       }
@@ -219,6 +231,32 @@ class EditProduct extends StatelessWidget {
                     height: 5,
                   ),
                   const DropDown(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    width: double.infinity,
+                    child: CupertinoTextField(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 20.0),
+                      placeholder: 'Promos (optional)',
+                      onChanged: (value) {
+                        BlocProvider.of<ProductBloc>(context)
+                            .add(const AddErrorEvent(withError: false));
+                      },
+                      controller: promosCtrl,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            offset: Offset(0, 2),
+                            blurRadius: 4.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 30,
                   ),
@@ -272,6 +310,8 @@ class EditProduct extends StatelessWidget {
                             'category': state.category,
                             'type': 'product',
                             'imageUrl': url ?? arguments.imageUrl,
+                            'promo':
+                                promosCtrl.text.isEmpty ? '' : promosCtrl.text,
                           }).then((value) {
                             const snackBar = SnackBar(
                               content: Text('Product Edited'),
